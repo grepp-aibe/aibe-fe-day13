@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실습2</title>
+  </head>
+  <body>
+    <h1>Promise의 노래를 들어라</h1>
+    <h1>해변의 매크로큐 (setTimeOut, setInterval)</h1>
+    <h1>마이크로큐를 쫓는 모험 (Promise)</h1>
+    <div id="box"></div>
+    <script>
+      // 1. 누군가는 이런 문제로 사흘 정도는 울어본 것 같다
+      // 2. 지금 누군가는 그것을 누군가에게 주입하여 그 기간을 하루로 줄이려고 하고 있다
+      // 3. setTimeout/interval은 Promise가 아니야!!! stay!!!
+      //    (시공간을 넘어...)
+      // 4. 제발 Promise로 감싸! 제발... async가 있어야 await를 쓸 수 있어... 제발... 제발... 흓... (매크로큐/마이크로큐와 비동기 제대로 모르고 js를 쓴 어느 0~2년차 사이 풀스택 개발자의 호소)
+      const box = document.querySelector("#box");
+
+      function addMsg(container, text) {
+        const msg = document.createElement("p");
+        msg.textContent = text;
+        container.appendChild(msg);
+      }
+
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const value = Math.random();
+          if (value > 0.5) {
+            // const msg = document.createElement("p");
+            // msg.textContent = "성공!";
+            // container.appendChild(msg);
+            addMsg(box, "성공");
+            resolve(value); // 성공 처리
+          } else {
+            addMsg(box, "실패");
+            reject(value); // 실패 처리
+          }
+        }, 1000); // pending -> 성공 fullfilled / rejected...? (교안 읽어보세요... => 의식 거의 안함)
+      });
+      //   p.then(() => console.log(1))
+      //     .then(() => console.log(2))
+      //     .then(() => console.log(3));
+      //   p.then((value) => console.log(value, 1))
+      //     .then(() => console.log(2))
+      //     .then(() => console.log(3));
+      //   p.then((value) => console.log(value, 1))
+      //     .then(() => console.log(2))
+      //     .then(() => console.log(3))
+      //     .catch(() => console.log(-1));
+      p.then((value) => console.log(value, 1))
+        .then(() => console.log(2))
+        .then(() => console.log(3))
+        .catch((error) => console.log(error, -1)); // throw도 가능
+      // Promise... -> 경쟁조건, 병렬 실행 같은 건 안할 거임
+      // => 리액트나 타입스크립트 안할 거면 여러분들 안 써요.
+    </script>
+  </body>
+</html>
